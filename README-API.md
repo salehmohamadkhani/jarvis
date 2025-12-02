@@ -48,7 +48,7 @@ API endpoints به صورت Vercel Serverless Functions در پوشه `api/` ت�
 ### Health Check
 - `GET /api/health` - بررسی اتصال به دیتابیس (استفاده از `api/health.js`)
 
-سایر endpoints در `api/index.js` تعریف شده‌اند:
+سایر endpoints به صورت جداگانه در فایل‌های `api/projects.js`, `api/tasks.js`, `api/meetings.js`, و `api/collaborators.js` تعریف شده‌اند:
 
 ### Projects
 - `GET /api/projects` - دریافت همه پروژه‌ها

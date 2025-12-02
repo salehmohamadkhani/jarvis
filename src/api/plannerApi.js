@@ -1,7 +1,13 @@
 // src/api/plannerApi.js
+// In production, use empty string (relative URL). In dev, allow localhost fallback.
+// Check if we're in production by looking at hostname (not localhost)
+const isProduction = typeof window !== 'undefined' && 
+  window.location.hostname !== 'localhost' && 
+  window.location.hostname !== '127.0.0.1';
+
 const API_BASE_URL =
   import.meta.env.VITE_BACKEND_URL ||
-  (import.meta.env.DEV ? 'http://localhost:3001' : '')
+  (isProduction ? '' : 'http://localhost:3001')
 
 // Helper function for API calls
 async function apiCall(endpoint, options = {}) {

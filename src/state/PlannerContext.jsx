@@ -26,10 +26,7 @@ export function PlannerProvider({ children }) {
       setState((prev) => ({ ...prev, loading: true, error: null }))
 
       // Check API health first
-      const health = await healthCheck()
-      if (!health.ok || health.database !== 'connected') {
-        throw new Error('Database connection failed')
-      }
+      await healthCheck()
 
       // Load all data in parallel
       const [projects, tasks, meetings, collaborators] = await Promise.all([

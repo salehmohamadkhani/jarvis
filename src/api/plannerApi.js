@@ -1,6 +1,6 @@
 // src/api/plannerApi.js
 // API base URL: use VITE_BACKEND_URL if set, otherwise default to /api for Vercel serverless functions
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'api';
 // Helper function for API calls
 async function apiCall(endpoint, options = {}) {
   const url = `${API_BASE_URL}${endpoint}`

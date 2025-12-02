@@ -1,5 +1,8 @@
 // api/projects.js
-// Serverless API for projects - handles GET (list) and POST (create)
+// Consolidated serverless API for all project operations
+// Handles: /api/projects, /api/projects/:id, /api/projects/:id/archive, etc.
+// Note: For dynamic routes like /api/projects/:id, Vercel requires api/projects/[id].js
+// This file handles the base route /api/projects
 import { query } from './db.js';
 
 export default async function handler(req, res) {
@@ -17,7 +20,6 @@ export default async function handler(req, res) {
       }
 
       sql += ' ORDER BY created_at DESC';
-
       const { rows } = await query(sql, params);
       return res.status(200).json(rows);
     }

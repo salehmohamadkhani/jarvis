@@ -1,5 +1,7 @@
 // api/tasks.js
-// Serverless API for tasks - handles GET (list) and POST (create)
+// Consolidated serverless API for all task operations
+// Handles: /api/tasks (GET list, POST create)
+// Note: For dynamic routes like /api/tasks/:id, use api/tasks/[...slug].js
 import { query } from './db.js';
 
 export default async function handler(req, res) {
@@ -79,4 +81,3 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 }
-

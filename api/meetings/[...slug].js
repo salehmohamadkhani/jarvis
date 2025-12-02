@@ -1,17 +1,15 @@
-// api/meetings/[id].js
-// Serverless API for single meeting operations
+// api/meetings/[...slug].js
+// Catch-all route for all meeting operations with IDs
+// Handles: /api/meetings/:id
 import { query } from '../db.js';
 
 export default async function handler(req, res) {
-  const { id } = req.query;
-
-  if (!id) {
-    return res.status(400).json({ error: 'Meeting ID is required' });
-  }
+  const slug = req.query.slug || [];
+  const id = slug[0] || null;
 
   try {
     // GET /api/meetings/:id - Get single meeting
-    if (req.method === 'GET') {
+    if (req.method === 'GET' && id) {
       const { rows } = await query('SELECT * FROM meetings WHERE id = $1', [id]);
       if (rows.length === 0) {
         return res.status(404).json({ error: 'Meeting not found' });
@@ -20,7 +18,7 @@ export default async function handler(req, res) {
     }
 
     // PUT /api/meetings/:id - Update meeting
-    if (req.method === 'PUT') {
+    if (req.method === 'PUT' && id) {
       const {
         title,
         scheduledAt,
@@ -51,7 +49,7 @@ export default async function handler(req, res) {
     }
 
     // DELETE /api/meetings/:id - Delete meeting
-    if (req.method === 'DELETE') {
+    if (req.method === 'DELETE' && id) {
       const { rowCount } = await query('DELETE FROM meetings WHERE id = $1', [id]);
       if (rowCount === 0) {
         return res.status(404).json({ error: 'Meeting not found' });
@@ -66,4 +64,3 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 }
-

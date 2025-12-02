@@ -1,5 +1,7 @@
 // api/collaborators.js
-// Serverless API for collaborators - handles GET (list) and POST (create)
+// Consolidated serverless API for all collaborator operations
+// Handles: /api/collaborators (GET list, POST create)
+// Note: For dynamic routes like /api/collaborators/:id, use api/collaborators/[...slug].js
 import { query } from './db.js';
 
 export default async function handler(req, res) {
@@ -44,4 +46,3 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 }
-

@@ -1,17 +1,15 @@
-// api/collaborators/[id].js
-// Serverless API for single collaborator operations
+// api/collaborators/[...slug].js
+// Catch-all route for all collaborator operations with IDs
+// Handles: /api/collaborators/:id
 import { query } from '../db.js';
 
 export default async function handler(req, res) {
-  const { id } = req.query;
-
-  if (!id) {
-    return res.status(400).json({ error: 'Collaborator ID is required' });
-  }
+  const slug = req.query.slug || [];
+  const id = slug[0] || null;
 
   try {
     // GET /api/collaborators/:id - Get single collaborator
-    if (req.method === 'GET') {
+    if (req.method === 'GET' && id) {
       const { rows } = await query('SELECT * FROM collaborators WHERE id = $1', [id]);
       if (rows.length === 0) {
         return res.status(404).json({ error: 'Collaborator not found' });
@@ -20,7 +18,7 @@ export default async function handler(req, res) {
     }
 
     // PUT /api/collaborators/:id - Update collaborator
-    if (req.method === 'PUT') {
+    if (req.method === 'PUT' && id) {
       const {
         name,
         role,
@@ -49,7 +47,7 @@ export default async function handler(req, res) {
     }
 
     // DELETE /api/collaborators/:id - Delete collaborator
-    if (req.method === 'DELETE') {
+    if (req.method === 'DELETE' && id) {
       const { rowCount } = await query('DELETE FROM collaborators WHERE id = $1', [id]);
       if (rowCount === 0) {
         return res.status(404).json({ error: 'Collaborator not found' });
@@ -64,4 +62,3 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 }
-

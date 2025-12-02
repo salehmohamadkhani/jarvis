@@ -1,5 +1,7 @@
 // api/meetings.js
-// Serverless API for meetings - handles GET (list) and POST (create)
+// Consolidated serverless API for all meeting operations
+// Handles: /api/meetings (GET list, POST create)
+// Note: For dynamic routes like /api/meetings/:id, use api/meetings/[...slug].js
 import { query } from './db.js';
 
 export default async function handler(req, res) {
@@ -61,4 +63,3 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 }
-

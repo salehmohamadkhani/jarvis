@@ -1,8 +1,6 @@
 // src/api/plannerApi.js
 // API base URL: use VITE_BACKEND_URL if set, otherwise default to /api for Vercel serverless functions
-const API_BASE_URL =
-  import.meta.env.VITE_BACKEND_URL ||
-  '/api'
+const API_BASE_URL ='/api'
 
 // Helper function for API calls
 async function apiCall(endpoint, options = {}) {
@@ -336,23 +334,18 @@ export const collaboratorsApi = {
 
 // Health check
 export async function healthCheck() {
-  const url = `${API_BASE_URL}/health`;
-
   try {
-    const res = await fetch(url);
+    const res = await fetch(`${API_BASE_URL}/health`);
     if (!res.ok) {
-      return { ok: false, status: 'error', database: 'disconnected', error: 'Database connection failed' };
+      throw new Error('Database connection failed');
     }
-
-    const data = await res.json();
-    if (!data.ok) {
-      return { ok: false, status: 'error', database: 'disconnected', error: data.error || 'Database connection failed' };
-    }
-
-    return { ok: true, status: 'ok', database: 'connected' };
-  } catch (error) {
-    console.error('Health check failed:', error);
-    return { ok: false, status: 'error', database: 'disconnected', error: error.message || 'Database connection failed' };
+    return await res.json();
+  } catch (err) {
+    console.error('Health check failed:', err);
+    throw err;
   }
 }
+
+
+
 

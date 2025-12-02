@@ -75,3 +75,4 @@ CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status);
 CREATE INDEX IF NOT EXISTS idx_meetings_project_id ON meetings(project_id);
 CREATE INDEX IF NOT EXISTS idx_projects_archived ON projects(archived);
 
+

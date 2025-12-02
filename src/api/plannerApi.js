@@ -1,10 +1,12 @@
 // src/api/plannerApi.js
-// در production از همان domain استفاده می‌کنیم، در development از localhost
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
+// Use relative URL for same-origin requests (works on Vercel)
+const API_BASE_URL =
+  import.meta.env.VITE_BACKEND_URL ||
+  `${window.location.origin}/api`
 
 // Helper function for API calls
 async function apiCall(endpoint, options = {}) {
-  const url = `${API_BASE_URL}/api${endpoint}`
+  const url = `${API_BASE_URL}${endpoint}`
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -335,11 +337,17 @@ export const collaboratorsApi = {
 // Health check
 export const healthCheck = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/health/db`)
-    return await response.json()
+    const response = await fetch(`${API_BASE_URL}/health/db`)
+    const result = await response.json()
+    // Convert { ok: true/false } format to legacy format for compatibility
+    if (result.ok) {
+      return { ok: true, status: 'ok', database: 'connected' }
+    } else {
+      return { ok: false, status: 'error', database: 'disconnected', error: result.error }
+    }
   } catch (error) {
     console.error('Health check failed:', error)
-    return { status: 'error', database: 'disconnected' }
+    return { ok: false, status: 'error', database: 'disconnected', error: error.message }
   }
 }
 

@@ -27,7 +27,7 @@ export function PlannerProvider({ children }) {
 
       // Check API health first
       const health = await healthCheck()
-      if (health.database !== 'connected') {
+      if (!health.ok || health.database !== 'connected') {
         throw new Error('Database connection failed')
       }
 

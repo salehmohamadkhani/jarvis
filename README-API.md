@@ -1,114 +1,110 @@
 # اتصال Frontend به Backend API
 
-این پروژه حالا به دیتابیس PostgreSQL (Neon) متصل است و از API backend استفاده می‌کند.
+این پروژه به دیتابیس PostgreSQL (Neon) متصل است و از Vercel Serverless Functions استفاده می‌کند.
 
 ## تنظیمات اولیه
 
 ### 1. نصب Dependencies
 
 ```bash
-cd planner-web
 npm install
 ```
 
-این دستور `@tabler/icons-react` را هم نصب می‌کند که برای آیکون‌ها استفاده می‌شود.
+این دستور تمام dependencies لازم را نصب می‌کند.
 
-### 2. تنظیم URL API
+### 2. تنظیم Environment Variables
 
-یک فایل `.env` در فولدر `planner-web` ایجاد کنید:
+برای اجرای محلی، یک فایل `.env` در root پروژه ایجاد کنید:
 
 ```env
-VITE_BACKEND_URL=http://localhost:3001/api
+DATABASE_URL=postgresql://user:password@host/database?sslmode=require
 ```
 
-یا اگر backend روی پورت دیگری اجرا می‌شود، URL را تغییر دهید.
+یا می‌توانید از `POSTGRES_URL` یا `POSTGRES_PRISMA_URL` استفاده کنید.
 
-### 3. اجرای Backend
+**نکته:** در Vercel، این متغیرها به صورت خودکار از تنظیمات پروژه خوانده می‌شوند.
 
-قبل از اجرای frontend، مطمئن شوید که backend در حال اجرا است:
-
-```bash
-cd ../backend
-npm install
-npm run migrate
-npm start
-```
-
-Backend باید روی `http://localhost:3001` اجرا شود.
-
-### 4. اجرای Frontend
+### 3. اجرای Frontend (Development)
 
 ```bash
-cd planner-web
 npm run dev
 ```
 
-Frontend روی `http://localhost:5173` اجرا می‌شود.
+Frontend روی `http://localhost:5173` اجرا می‌شود و به صورت خودکار از `/api` endpoints استفاده می‌کند.
 
-## تغییرات انجام شده
+### 4. Deploy روی Vercel
 
-### API Client (`src/api/plannerApi.js`)
-- تمام API endpoints برای Projects, Tasks, Meetings, Collaborators
-- تبدیل خودکار فرمت دیتابیس به فرمت frontend
-- مدیریت خطاها
+1. پروژه را به Vercel متصل کنید
+2. Environment Variables را در تنظیمات Vercel اضافه کنید:
+   - `DATABASE_URL` (یا `POSTGRES_URL` / `POSTGRES_PRISMA_URL`)
+3. Deploy کنید
 
-### PlannerContext (`src/state/PlannerContext.jsx`)
-- استفاده از API به جای localStorage
-- بارگذاری خودکار داده‌ها از API
-- مدیریت state با React hooks
-- مدیریت loading و error states
-
-### Components جدید
-- `LoadingScreen.jsx` - نمایش صفحه loading
-- `ErrorScreen.jsx` - نمایش خطا و امکان retry
+API endpoints به صورت خودکار در `/api/*` در دسترس خواهند بود.
 
 ## ساختار API
 
+API endpoints در `api/index.js` تعریف شده‌اند و به صورت Vercel Serverless Functions اجرا می‌شوند.
+
+### Health Check
+- `GET /api/health/db` - بررسی اتصال به دیتابیس
+- `GET /api/health` - بررسی کلی وضعیت سیستم
+
 ### Projects
 - `GET /api/projects` - دریافت همه پروژه‌ها
+- `GET /api/projects/:id` - دریافت پروژه خاص
 - `POST /api/projects` - ایجاد پروژه
 - `PUT /api/projects/:id` - آپدیت پروژه
-- `PATCH /api/projects/:id/archive` - آرشیو
-- `PATCH /api/projects/:id/restore` - بازگردانی
+- `PATCH /api/projects/:id/archive` - آرشیو پروژه
+- `PATCH /api/projects/:id/restore` - بازگردانی پروژه
+- `DELETE /api/projects/:id` - حذف پروژه
 
 ### Tasks
 - `GET /api/tasks` - دریافت همه تسک‌ها
+- `GET /api/tasks/:id` - دریافت تسک خاص
 - `POST /api/tasks` - ایجاد تسک
 - `PUT /api/tasks/:id` - آپدیت تسک
-- `PATCH /api/tasks/:id/toggle` - تغییر وضعیت
+- `PATCH /api/tasks/:id/toggle` - تغییر وضعیت تسک
+- `PATCH /api/tasks/:id/archive` - آرشیو تسک
+- `DELETE /api/tasks/:id` - حذف تسک
 
 ### Meetings
 - `GET /api/meetings` - دریافت همه جلسات
+- `GET /api/meetings/:id` - دریافت جلسه خاص
 - `POST /api/meetings` - ایجاد جلسه
+- `PUT /api/meetings/:id` - آپدیت جلسه
+- `DELETE /api/meetings/:id` - حذف جلسه
 
 ### Collaborators
 - `GET /api/collaborators` - دریافت همه همکاران
+- `GET /api/collaborators/:id` - دریافت همکار خاص
 - `POST /api/collaborators` - ایجاد همکار
+- `PUT /api/collaborators/:id` - آپدیت همکار
+- `DELETE /api/collaborators/:id` - حذف همکار
 
 ## نکات مهم
 
-1. **CORS**: Backend باید CORS را برای `http://localhost:5173` فعال کرده باشد (در `.env` backend تنظیم شده)
+1. **Environment Variables**: در production، متغیرهای محیطی از طریق Vercel تنظیم می‌شوند.
 
-2. **Environment Variables**: فایل `.env` را در `.gitignore` قرار دهید
+2. **API Base URL**: Frontend به صورت خودکار از `window.location.origin/api` استفاده می‌کند. برای override کردن، می‌توانید `VITE_BACKEND_URL` را در `.env` تنظیم کنید.
 
-3. **Error Handling**: اگر backend در دسترس نباشد، صفحه خطا نمایش داده می‌شود
+3. **Error Handling**: اگر دیتابیس در دسترس نباشد، صفحه خطای مناسب نمایش داده می‌شود.
 
-4. **Data Sync**: داده‌ها به صورت real-time از API بارگذاری می‌شوند
+4. **Data Sync**: داده‌ها به صورت real-time از API بارگذاری می‌شوند.
 
 ## عیب‌یابی
 
-### خطای "Failed to fetch"
-- مطمئن شوید backend در حال اجرا است
-- بررسی کنید که URL در `.env` درست است
-- بررسی کنید که CORS در backend تنظیم شده است
-
 ### خطای "Database connection failed"
-- مطمئن شوید migration اجرا شده است (`npm run migrate` در backend)
-- بررسی کنید که `.env` در backend درست تنظیم شده است
+- بررسی کنید که `DATABASE_URL` در Vercel تنظیم شده است
 - بررسی کنید که دیتابیس Neon در دسترس است
+- بررسی کنید که SSL connection درست تنظیم شده است
+
+### خطای "Failed to fetch"
+- بررسی کنید که API endpoint درست است
+- Console مرورگر را بررسی کنید
+- Network tab را در DevTools بررسی کنید
 
 ### داده‌ها نمایش داده نمی‌شوند
 - Console مرورگر را بررسی کنید
 - Network tab را در DevTools بررسی کنید
 - مطمئن شوید که API responses موفق هستند
-
+- بررسی کنید که health check endpoint کار می‌کند (`/api/health/db`)

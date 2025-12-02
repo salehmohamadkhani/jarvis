@@ -1,8 +1,13 @@
 // src/components/ErrorScreen.jsx
-import { Button, Alert } from '@mantine/core'
+import { Button, Alert, List } from '@mantine/core'
 import { IconAlertCircle, IconRefresh } from '@tabler/icons-react'
 
 export default function ErrorScreen({ error, onRetry }) {
+  // Extract error message safely (don't expose sensitive info)
+  const errorMessage = error && typeof error === 'string' 
+    ? error 
+    : error?.message || 'Database connection failed'
+
   return (
     <div
       style={{
@@ -20,7 +25,14 @@ export default function ErrorScreen({ error, onRetry }) {
           color="red"
           mb="md"
         >
-          امکان اتصال به سرور وجود ندارد. لطفاً چند لحظه بعد دوباره تلاش کنید.
+          <div style={{ marginBottom: '1rem' }}>
+            <strong>Database connection failed</strong>
+          </div>
+          <List size="sm" spacing="xs" style={{ marginTop: '0.5rem' }}>
+            <List.Item>اتصال اینترنت خود را بررسی کنید.</List.Item>
+            <List.Item>اگر مشکل ادامه داشت، چند دقیقه بعد دوباره امتحان کنید.</List.Item>
+            <List.Item>در صورت تداوم خطا، با پشتیبان پروژه تماس بگیرید.</List.Item>
+          </List>
         </Alert>
         {onRetry && (
           <Button
@@ -31,9 +43,6 @@ export default function ErrorScreen({ error, onRetry }) {
             تلاش مجدد
           </Button>
         )}
-        <div style={{ marginTop: '1rem', fontSize: '0.875rem', color: '#666' }}>
-          <p>اگر مشکل ادامه داشت، تنظیمات سرور و اتصال به دیتابیس را بررسی کنید.</p>
-        </div>
       </div>
     </div>
   )

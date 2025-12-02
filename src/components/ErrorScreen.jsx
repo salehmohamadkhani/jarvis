@@ -26,13 +26,11 @@ export default function ErrorScreen({ error, onRetry }) {
           mb="md"
         >
           <div style={{ marginBottom: '1rem' }}>
-            امکان اتصال به پایگاه‌داده وجود ندارد. لطفاً کمی بعد دوباره تلاش کنید.
+            امکان اتصال به سرور وجود ندارد. لطفاً چند لحظه بعد دوباره تلاش کنید.
           </div>
-          <List size="sm" spacing="xs" style={{ marginTop: '0.5rem' }}>
-            <List.Item>اتصال اینترنت خود را بررسی کنید.</List.Item>
-            <List.Item>اگر مشکل ادامه داشت، صفحه را رفرش کنید یا بعداً دوباره سر بزنید.</List.Item>
-            <List.Item>در صورت تکرار خطا، با پشتیبانی تماس بگیرید یا توسعه‌دهنده را مطلع کنید.</List.Item>
-          </List>
+          <div style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
+            اگر مشکل ادامه داشت، تنظیمات سرور و اتصال به دیتابیس روی Vercel را بررسی کنید.
+          </div>
         </Alert>
         {onRetry && (
           <Button

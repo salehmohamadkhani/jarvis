@@ -26,12 +26,12 @@ export default function ErrorScreen({ error, onRetry }) {
           mb="md"
         >
           <div style={{ marginBottom: '1rem' }}>
-            <strong>Database connection failed</strong>
+            امکان اتصال به پایگاه‌داده وجود ندارد. لطفاً کمی بعد دوباره تلاش کنید.
           </div>
           <List size="sm" spacing="xs" style={{ marginTop: '0.5rem' }}>
             <List.Item>اتصال اینترنت خود را بررسی کنید.</List.Item>
-            <List.Item>اگر مشکل ادامه داشت، چند دقیقه بعد دوباره امتحان کنید.</List.Item>
-            <List.Item>در صورت تداوم خطا، با پشتیبان پروژه تماس بگیرید.</List.Item>
+            <List.Item>اگر مشکل ادامه داشت، صفحه را رفرش کنید یا بعداً دوباره سر بزنید.</List.Item>
+            <List.Item>در صورت تکرار خطا، با پشتیبانی تماس بگیرید یا توسعه‌دهنده را مطلع کنید.</List.Item>
           </List>
         </Alert>
         {onRetry && (

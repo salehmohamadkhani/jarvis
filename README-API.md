@@ -43,11 +43,12 @@ API endpoints به صورت خودکار در `/api/*` در دسترس خواه�
 
 ## ساختار API
 
-API endpoints در `api/index.js` تعریف شده‌اند و به صورت Vercel Serverless Functions اجرا می‌شوند.
+API endpoints به صورت Vercel Serverless Functions در پوشه `api/` تعریف شده‌اند.
 
 ### Health Check
-- `GET /api/health/db` - بررسی اتصال به دیتابیس
-- `GET /api/health` - بررسی کلی وضعیت سیستم
+- `GET /api/health` - بررسی اتصال به دیتابیس (استفاده از `api/health.js`)
+
+سایر endpoints در `api/index.js` تعریف شده‌اند:
 
 ### Projects
 - `GET /api/projects` - دریافت همه پروژه‌ها
@@ -85,7 +86,7 @@ API endpoints در `api/index.js` تعریف شده‌اند و به صورت Ve
 
 1. **Environment Variables**: در production، متغیرهای محیطی از طریق Vercel تنظیم می‌شوند.
 
-2. **API Base URL**: Frontend به صورت خودکار از `window.location.origin/api` استفاده می‌کند. برای override کردن، می‌توانید `VITE_BACKEND_URL` را در `.env` تنظیم کنید.
+2. **API Base URL**: در production، Frontend از URL نسبی (`/api`) استفاده می‌کند. در development، می‌توانید `VITE_BACKEND_URL` را در `.env` تنظیم کنید یا از localhost استفاده کنید.
 
 3. **Error Handling**: اگر دیتابیس در دسترس نباشد، صفحه خطای مناسب نمایش داده می‌شود.
 
@@ -107,4 +108,4 @@ API endpoints در `api/index.js` تعریف شده‌اند و به صورت Ve
 - Console مرورگر را بررسی کنید
 - Network tab را در DevTools بررسی کنید
 - مطمئن شوید که API responses موفق هستند
-- بررسی کنید که health check endpoint کار می‌کند (`/api/health/db`)
+- بررسی کنید که health check endpoint کار می‌کند (`/api/health`)

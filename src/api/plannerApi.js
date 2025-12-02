@@ -1,12 +1,11 @@
 // src/api/plannerApi.js
-// Use relative URL for same-origin requests (works on Vercel)
 const API_BASE_URL =
   import.meta.env.VITE_BACKEND_URL ||
-  `${window.location.origin}/api`
+  (import.meta.env.DEV ? 'http://localhost:3001' : '')
 
 // Helper function for API calls
 async function apiCall(endpoint, options = {}) {
-  const url = `${API_BASE_URL}${endpoint}`
+  const url = `${API_BASE_URL}/api${endpoint}`
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -335,19 +334,24 @@ export const collaboratorsApi = {
 }
 
 // Health check
-export const healthCheck = async () => {
+export async function healthCheck() {
+  const url = `${API_BASE_URL}/api/health`;
+
   try {
-    const response = await fetch(`${API_BASE_URL}/health/db`)
-    const result = await response.json()
-    // Convert { ok: true/false } format to legacy format for compatibility
-    if (result.ok) {
-      return { ok: true, status: 'ok', database: 'connected' }
-    } else {
-      return { ok: false, status: 'error', database: 'disconnected', error: result.error }
+    const res = await fetch(url);
+    if (!res.ok) {
+      return { ok: false, status: 'error', database: 'disconnected', error: 'Database connection failed' };
     }
+
+    const data = await res.json();
+    if (!data.ok) {
+      return { ok: false, status: 'error', database: 'disconnected', error: data.error || 'Database connection failed' };
+    }
+
+    return { ok: true, status: 'ok', database: 'connected' };
   } catch (error) {
-    console.error('Health check failed:', error)
-    return { ok: false, status: 'error', database: 'disconnected', error: error.message }
+    console.error('Health check failed:', error);
+    return { ok: false, status: 'error', database: 'disconnected', error: error.message || 'Database connection failed' };
   }
 }
 

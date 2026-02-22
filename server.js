@@ -2,9 +2,12 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from "dotenv";
-dotenv.config();
 import path from 'path';
 import { fileURLToPath } from 'url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// اول .env بعد .env.local (مقادیر .env.local اولویت دارند)
+dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env.local') });
 import { Pool } from 'pg';
 
 // ---------- تنظیمات عمومی ----------

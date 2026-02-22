@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useVoiceRecorder from '../hooks/useVoiceRecorder.js'
-import { transcribeAudioWithGemini, analyzePlannerIntent } from '../api/geminiClient.js'
+import { transcribeAudioWithOpenAI, analyzePlannerIntent } from '../api/gptClient.js'
 import { usePlanner } from '../state/PlannerContext.jsx'
 import { DSPage, DSSection, DSButton } from '../design-system'
 import {
@@ -110,12 +110,12 @@ export default function Assistant() {
       // مرحله ۱: تبدیل صوت به متن
       let transcript = ''
       try {
-        transcript = await transcribeAudioWithGemini(blob)
+        transcript = await transcribeAudioWithOpenAI(blob)
         setLastTranscript(transcript)
         setErrorMessage('')
       } catch (aiError) {
         console.error('Transcription failed', aiError)
-        setErrorMessage('تبدیل صوت به متن با خطا مواجه شد.')
+        setErrorMessage('تبدیل صوت به متن در حال حاضر در دسترس نیست. لطفاً از OpenAI Whisper API یا سرویس دیگری برای transcription استفاده کنید.')
         setMode('idle')
         return
       }

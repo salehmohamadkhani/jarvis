@@ -1,0 +1,31 @@
+name: Mirror LLM model to GitHub artifact
+
+on:
+  workflow_dispatch:
+    inputs:
+      model_url:
+        description: "Direct download URL (GGUF)"
+        required: true
+        default: "https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf"
+      artifact_name:
+        description: "Artifact name"
+        required: true
+        default: "qwen2.5-3b-instruct-q4_k_m-gguf"
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download model
+        run: |
+          set -euxo pipefail
+          mkdir -p out
+          curl -L --retry 5 --retry-delay 3 -o "out/model.gguf" "${{ inputs.model_url }}"
+          ls -lh out
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: out/model.gguf
+          if-no-files-found: error
+

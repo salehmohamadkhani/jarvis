@@ -10,6 +10,10 @@ const PERIODS = {
   year: { label: 'Yearly', days: 365 },
 }
 
+// PHASE 03 TODO: Replace this frontend-only useReducer state with API-backed persistence.
+// See DATA_MODEL.md for the target schema and PHASE_03_IMPLEMENTATION_PLAN.md for the migration plan.
+// The new finance_transactions, finance_commitments, and invoices tables are defined in db/schema.v2.sql.
+// After Phase 03: load initial data from API on mount, write through API with local fallback.
 const initialState = {
   transactions: [],
   commitments: [],

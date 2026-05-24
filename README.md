@@ -47,3 +47,18 @@ DATABASE_URL=postgresql://jarvis:jarvis@localhost:5432/jarvis?sslmode=disable
 ### حالت ابری (Neon/هر Postgres)
 
 اسکیمای اولیه: فایل `db/schema.sql` را یک بار در Neon (یا هر Postgres) در ادیتور SQL اجرا کنید. بعد از آن نیازی به مایگریشن جداگانه نیست.
+
+---
+
+## Documentation Roadmap (English)
+
+Jarvis development follows a phased roadmap. Key documentation files for contributors and AI agents:
+
+| File | Purpose |
+|------|---------|
+| [PRODUCT_SPEC.md](PRODUCT_SPEC.md) | Product specification: positioning, users, modules, MVP scope, success criteria |
+| [DATA_MODEL.md](DATA_MODEL.md) | Data model: current tables, proposed v2 entities, finance/invoice model, migration strategy |
+| [PHASE_03_IMPLEMENTATION_PLAN.md](PHASE_03_IMPLEMENTATION_PLAN.md) | Practical plan for Finance Persistence phase: endpoints, migration, testing |
+| [ROADMAP.md](ROADMAP.md) | 8-phase development roadmap from foundation through portfolio release |
+| [CHANGELOG.md](CHANGELOG.md) | Release history and unreleased changes |
+| [db/schema.v2.sql](db/schema.v2.sql) | Draft schema for Phase 03 finance/invoice tables (review before applying) |

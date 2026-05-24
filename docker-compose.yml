@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: jarvis-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: jarvis
+      POSTGRES_PASSWORD: jarvis
+      POSTGRES_DB: jarvis
+    volumes:
+      - jarvis_pgdata:/var/lib/postgresql/data
+
+  # ایمیج سبک (build محلی) — دیگر لایهٔ ~۲گیگابایتی Docker Hub لازم نیست؛ اولین بار مدل از Hugging Face کش می‌شود.
+  # اجرا: npm run whisper:up  (build خودکار) یا: docker compose --profile whisper up -d --build whisper
+  whisper:
+    build:
+      context: ./docker/whisper-jarvis
+      dockerfile: Dockerfile
+    image: jarvis-whisper-stt:local
+    container_name: jarvis-whisper
+    profiles: ["whisper"]
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    environment:
+      WHISPER_MODEL: base
+      WHISPER_DEVICE: cpu
+      WHISPER_COMPUTE_TYPE: int8
+    volumes:
+      - jarvis_whisper_cache:/root/.cache
+
+volumes:
+  jarvis_pgdata:
+  jarvis_whisper_cache:

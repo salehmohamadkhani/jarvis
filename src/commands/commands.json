@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "pages": [
+    { "id": "assistant", "path": "/", "title": "Assistant", "keywords": ["assistant", "jarvis", "chat", "دستیار"] },
+    { "id": "dashboard", "path": "/dashboard", "title": "Dashboard", "keywords": ["dashboard", "داشبورد"] },
+    { "id": "today", "path": "/today", "title": "Today", "keywords": ["today", "امروز"] },
+    { "id": "projects", "path": "/projects", "title": "Projects", "keywords": ["projects", "پروژه", "پروژه‌ها"] },
+    { "id": "projects_archived", "path": "/projects/archived", "title": "Archived projects", "keywords": ["archived", "archive", "آرشیو"] },
+    { "id": "project_details", "path": "/projects/:id", "title": "Project details", "keywords": ["project", "جزئیات پروژه"] },
+    { "id": "finance", "path": "/finance", "title": "Finance", "keywords": ["finance", "مالی"] },
+    { "id": "collaborators", "path": "/collaborators", "title": "Collaborators", "keywords": ["collaborators", "همکار", "همکاران"] },
+    { "id": "more", "path": "/more", "title": "More", "keywords": ["more", "بیشتر"] },
+    { "id": "settings", "path": "/settings", "title": "Settings", "keywords": ["settings", "تنظیمات"] }
+  ],
+  "commands": [
+    {
+      "id": "navigate_today",
+      "title": "Navigate: Today",
+      "triggers": ["today", "امروز", "صفحه امروز"],
+      "kind": "navigation",
+      "targetPageId": "today",
+      "requiresGoVerb": true,
+      "slots": []
+    },
+    {
+      "id": "navigate_projects",
+      "title": "Navigate: Projects",
+      "triggers": ["projects", "پروژه‌ها", "صفحه پروژه‌ها"],
+      "kind": "navigation",
+      "targetPageId": "projects",
+      "requiresGoVerb": true,
+      "slots": []
+    },
+    {
+      "id": "navigate_finance",
+      "title": "Navigate: Finance",
+      "triggers": ["finance", "مالی", "صفحه مالی"],
+      "kind": "navigation",
+      "targetPageId": "finance",
+      "requiresGoVerb": true,
+      "slots": []
+    },
+    {
+      "id": "create_project",
+      "title": "Create project",
+      "triggers": ["پروژه جدید", "پروژه بساز", "ایجاد پروژه", "add project", "create project"],
+      "kind": "action",
+      "slots": [
+        {
+          "key": "projectName",
+          "type": "string",
+          "required": true,
+          "question": "اسم پروژه چی باشه؟"
+        },
+        {
+          "key": "priority",
+          "type": "enum",
+          "required": false,
+          "options": [
+            { "value": 1, "label": "خیلی بالا" },
+            { "value": 2, "label": "بالا" },
+            { "value": 3, "label": "معمولی" },
+            { "value": 4, "label": "پایین" },
+            { "value": 5, "label": "خیلی پایین" }
+          ],
+          "question": "اولویت پروژه چیه؟"
+        }
+      ]
+    },
+    {
+      "id": "create_task",
+      "title": "Create task",
+      "triggers": ["تسک جدید", "وظیفه جدید", "کار جدید", "add task", "create task"],
+      "kind": "action",
+      "slots": [
+        {
+          "key": "project",
+          "type": "entity:project",
+          "required": true,
+          "question": "این تسک برای کدوم پروژه باشه؟"
+        },
+        {
+          "key": "title",
+          "type": "string",
+          "required": true,
+          "question": "عنوان تسک چیه؟"
+        },
+        {
+          "key": "dueAt",
+          "type": "datetime",
+          "required": false,
+          "question": "چه زمانی انجام بشه؟"
+        },
+        {
+          "key": "assignee",
+          "type": "entity:collaborator",
+          "required": false,
+          "question": "می‌خوای به کی اساین بشه؟"
+        },
+        {
+          "key": "priority",
+          "type": "enum",
+          "required": false,
+          "options": [
+            { "value": 1, "label": "خیلی بالا" },
+            { "value": 2, "label": "بالا" },
+            { "value": 3, "label": "معمولی" },
+            { "value": 4, "label": "پایین" },
+            { "value": 5, "label": "خیلی پایین" }
+          ],
+          "question": "اولویت تسک چیه؟"
+        },
+        {
+          "key": "notes",
+          "type": "text",
+          "required": false,
+          "question": "توضیحات/یادداشت هم داری؟"
+        }
+      ]
+    },
+    {
+      "id": "create_meeting",
+      "title": "Create meeting",
+      "triggers": ["جلسه", "می팅", "set meeting", "schedule meeting"],
+      "kind": "action",
+      "slots": [
+        {
+          "key": "title",
+          "type": "string",
+          "required": true,
+          "question": "عنوان جلسه چی باشه؟"
+        },
+        {
+          "key": "scheduledAt",
+          "type": "datetime",
+          "required": true,
+          "question": "چه تاریخی/ساعتی باشه؟"
+        },
+        {
+          "key": "project",
+          "type": "entity:project",
+          "required": false,
+          "question": "این جلسه مربوط به کدوم پروژه‌ست؟ (اختیاری)"
+        },
+        {
+          "key": "participants",
+          "type": "entity:collaborator[]",
+          "required": false,
+          "question": "چه کسی/چه کسانی توی جلسه هستن؟ (اختیاری)"
+        },
+        {
+          "key": "durationMinutes",
+          "type": "number",
+          "required": false,
+          "question": "مدت جلسه چند دقیقه باشه؟ (اختیاری)"
+        }
+      ]
+    }
+  ]
+}
+

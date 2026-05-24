@@ -1,0 +1,35 @@
+{
+  "log": { "loglevel": "warning" },
+  "inbounds": [{
+    "listen": "127.0.0.1",
+    "port": 1080,
+    "protocol": "socks",
+    "settings": { "auth": "noauth", "udp": false },
+    "tag": "socks-in"
+  }],
+  "outbounds": [
+    {
+      "protocol": "vless",
+      "settings": {
+        "vnext": [{
+          "address": "آدرس_سرور_VLESS",
+          "port": 443,
+          "users": [{ "id": "یوآیدی_VLESS", "encryption": "none" }]
+        }]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "tls",
+        "tlsSettings": { "serverName": "همان_دامنه_یا_SNI" }
+      },
+      "tag": "vless-out"
+    },
+    { "protocol": "freedom", "tag": "direct" },
+    { "protocol": "blackhole", "tag": "block" }
+  ],
+  "routing": {
+    "rules": [
+      { "type": "field", "inboundTag": ["socks-in"], "outboundTag": "vless-out" }
+    ]
+  }
+}

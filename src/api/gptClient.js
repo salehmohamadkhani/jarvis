@@ -138,7 +138,6 @@ function pickClosestByName(items, name) {
 
 function localIntentRouter(message, availableProjects, availableCollaborators) {
   const text = normalizeFa(message)
-  const lower = text.toLowerCase()
 
   const base = {
     intent: 'unknown',

@@ -9,20 +9,12 @@ export function hasBrowserSpeechRecognition() {
   return !!(window.SpeechRecognition || window.webkitSpeechRecognition)
 }
 
-function isMobile() {
-  if (typeof navigator === 'undefined') return false
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 2)
-}
-
 export async function transcribeWithFallback(blob, options = {}) {
   const { browserFallbackText = '' } = options
   const fallbackTrim = (browserFallbackText || '').trim()
 
   const useServer = !WEB_SPEECH_ONLY
   if (!useServer) return fallbackTrim
-
-  const hasBrowser = hasBrowserSpeechRecognition()
-
 
   try {
     const text = await transcribeAudio(blob)

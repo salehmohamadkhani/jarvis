@@ -226,7 +226,7 @@ export const tasksApi = {
       kind: updates.kind,
       costAmount: updates.costAmount,
       notes: updates.notes,
-      assigneeId: updates.assigneeId ? parseInt(updates.assigneeId) : null,
+      assigneeId: updates.assigneeId != null && updates.assigneeId !== '' ? String(updates.assigneeId) : null,
     }
     const row = await apiCall(`/tasks/${id}`, { method: 'PUT', body: payload })
     return transformTask(row)
@@ -338,7 +338,9 @@ export async function healthCheck() {
     }
 
     const data = await res.json();
-    if (!data.ok) {
+    // Accept multiple response shapes for resilience
+    const isHealthy = data.ok === true || data.status === 'ok' || data.database === 'connected';
+    if (!isHealthy) {
       throw new Error('Database connection failed');
     }
 

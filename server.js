@@ -229,7 +229,7 @@ app.get('/api/health', async (req, res) => {
   const includeLlm = req.query.llm === '1' || req.query.full === '1';
   try {
     await dbHealthCheck();
-    const out = { ok: true, database: true };
+    const out = { ok: true, status: 'ok', database: 'connected' };
     if (includeLlm) {
       out.llm = await fetchOllamaLlmStatus(2500);
     }

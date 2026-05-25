@@ -1,6 +1,6 @@
 import { DSPage, DSSection, DSCard, DSButton } from '../design-system'
 import { useMemo, useState } from 'react'
-import { getCommandRegistry, resetCommandRegistry, saveCommandRegistry } from '../commands/registry.js'
+import { getCommandRegistry, saveCommandRegistry } from '../commands/registry.js'
 import { IconPlus, IconTrash } from '@tabler/icons-react'
 
 const SLOT_TYPES = [
@@ -155,7 +155,6 @@ export default function Settings() {
 
   const pages = registry.pages || []
   const commands = registry.commands || []
-  const selected = commands.find((c) => c.id === selectedId)
 
   function updateDraft(patchOrFn) {
     setDraft((prev) => {

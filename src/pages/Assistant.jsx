@@ -123,7 +123,7 @@ export default function Assistant() {
     try {
       const toSave = conversationMessages.slice(-MAX_PERSISTED_MESSAGES)
       if (typeof sessionStorage !== 'undefined') sessionStorage.setItem(SESSION_CONVERSATION_KEY, JSON.stringify(toSave))
-    } catch (e) {
+    } catch {
       // ignore quota or parse errors
     }
   }, [conversationMessages])
@@ -466,7 +466,8 @@ export default function Assistant() {
                 try {
                   const d = new Date(updatedTask.dueDate)
                   if (!isNaN(d.getTime())) dueAt = d.toISOString()
-                } catch (_) {}
+                } catch {
+                }
               }
               await addTask({
                 projectId: updatedTask.projectId,
@@ -733,8 +734,8 @@ export default function Assistant() {
                     break
                   }
                 }
-              } catch (e) {
-                console.error('Error parsing date', e)
+              } catch {
+                console.error('Error parsing date')
               }
             }
           }
@@ -1356,8 +1357,8 @@ export default function Assistant() {
           if (!isNaN(date.getTime())) {
             dueAt = date.toISOString()
           }
-        } catch (e) {
-          console.error('Invalid date format', e)
+        } catch {
+          console.error('Invalid date format')
         }
       }
 

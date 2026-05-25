@@ -20,17 +20,17 @@ export default function DonutChart({
     )
   }
 
-  let cumulative = 0
-  const arcs = segments
-    .filter((s) => (Number(s.value) || 0) > 0)
-    .map((s, i) => {
-      const len = (s.value / total) * circ
-      const dash = `${len} ${circ}`
-      const offset = -cumulative
-      cumulative += len
-      return (
+  const filtered = segments.filter((s) => (Number(s.value) || 0) > 0)
+  const arcs = filtered.reduce((acc, s) => {
+    const cumulative = acc.length > 0 ? acc[acc.length - 1]._endOffset : 0
+    const len = (s.value / total) * circ
+    const dash = `${len} ${circ}`
+    const offset = -cumulative
+    acc.push({
+      _endOffset: cumulative + len,
+      element: (
         <circle
-          key={`${s.label}-${i}`}
+          key={`${s.label}-${acc.length}`}
           cx={cx}
           cy={cy}
           r={r}
@@ -42,8 +42,10 @@ export default function DonutChart({
           transform={`rotate(-90 ${cx} ${cy})`}
           strokeLinecap="butt"
         />
-      )
+      ),
     })
+    return acc
+  }, []).map((a) => a.element)
 
   return (
     <div className="finance-donut-root" style={{ width: size, height: size }}>

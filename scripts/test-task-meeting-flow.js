@@ -5,10 +5,6 @@
  */
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-function isUuid(s) {
-  return s != null && typeof s === 'string' && UUID_REGEX.test(s.trim());
-}
-
 // شبیه‌سازی PlannerContext addTask
 function resolveProjectId(input, projects) {
   let projectId = input.projectId != null ? String(input.projectId) : null;

@@ -1,4 +1,4 @@
-# Jarvis — Product Specification
+# Jarvis -- Product Specification
 
 ## Product Name
 
@@ -8,21 +8,33 @@ Jarvis
 
 AI-powered Freelance Project & Finance OS
 
-## Positioning
+## Product Positioning
 
-Jarvis is an open-source, AI-assisted operating system for freelance project and finance management. Unlike traditional project management tools (Jira, Asana, Monday.com) which are designed for large teams with dedicated project managers, Jarvis is built from the ground up for:
+Jarvis is an AI-powered freelance operating system for managing projects, tasks, meetings, collaborators, invoices, payments, project profitability, and daily execution through a voice/text assistant.
 
-- **Independent freelancers** who manage their own projects and finances
-- **Product builders** who want an AI-native workflow tool
-- **Small technical teams** (2-10 people) who self-host their tools
-- **AI-assisted builders** who prefer natural language interaction over clicking through menus
+Unlike traditional project management tools (Jira, Asana, Monday.com) that are designed for large teams with dedicated project managers, Jarvis is built from the ground up for independent professionals and small teams who want an AI-native, self-hosted workflow tool.
 
 ## Primary Users
 
-1. **Freelance Developer/Designer**: Manages multiple client projects, tracks tasks and deadlines, logs time and expenses, sends invoices
-2. **Solo Product Builder**: Builds a product while managing tasks, notes, and milestones through voice/text assistant
-3. **Small Agency Owner**: Coordinates team members (collaborators), tracks project profitability, schedules meetings
-4. **AI-assisted Builder**: Interacts primarily through the assistant to create, update, and query projects and tasks
+| User Type | Description |
+|-----------|-------------|
+| **Freelancers** | Independent professionals managing multiple client projects, tracking tasks and deadlines, logging time and expenses, sending invoices |
+| **Full-stack Builders** | Solo product builders who need to manage tasks, notes, and milestones through voice/text assistant |
+| **AI-assisted Builders** | Users who prefer natural language interaction over clicking through menus |
+| **Small Technical Teams** | Teams of 2-10 people who self-host their tools and need project coordination |
+| **Project-based Consultants** | Consultants who need client management, time tracking, invoicing, and profitability analysis |
+
+## Core Problem
+
+Freelancers and small teams lack a purpose-built tool that combines project management, finance tracking, and AI assistance in a single, self-hosted system. They either:
+
+- Use disconnected tools (Trello for tasks, Excel for finances, Google Calendar for meetings)
+- Use enterprise tools that are too heavy and expensive
+- Have no finance tracking at all, making it hard to understand project profitability
+
+## Core Promise
+
+"Jarvis helps you run your freelance business from one place -- tasks, meetings, money, and clients -- through a natural voice/text assistant."
 
 ## Core User Jobs
 
@@ -33,40 +45,33 @@ Jarvis is an open-source, AI-assisted operating system for freelance project and
 5. **Manage money** (future): Track income, expenses, project profitability, commitments, and invoices
 6. **Use the assistant**: Natural language voice/text interface for all of the above
 
-## Main Modules
+## Main Product Modules
 
-### Assistant (`/`)
-Primary interface. Natural language chat with voice input support. Can create tasks, meetings, projects, and query data. Powered by any OpenAI-compatible LLM. Commands registry supports text-based and JSON-based action parsing.
+| Module | Route | Purpose | Status |
+|--------|-------|---------|--------|
+| **Assistant** | `/` | Primary interface. Natural language chat with voice input. Can create tasks, meetings, projects. Powered by any OpenAI-compatible LLM. | Working |
+| **Today** | `/today` | Daily view of tasks (overdue, today, upcoming) and meetings. Quick-add. Calendar card. | Working |
+| **Dashboard** | `/dashboard` | Overview of all projects with stats, finance summary, revenue chart, task completion. | Working (finance from prototype) |
+| **Projects** | `/projects` | List of active/archived projects with task counts and balance. Add/archive. | Working |
+| **Project Details** | `/projects/:id` | Single project view with header, finance mini-card, project info, tasks. | Basic (needs Phase 04) |
+| **Finance** | `/finance` | Income/expense tracking, commitments, categories, upcoming payouts. | Prototype (frontend-only) |
+| **Invoices** | *(future)* | Create, send, track invoices and payments. | Planned (Phase 03+) |
+| **Collaborators** | `/collaborators` | Contact directory with roles, email, phone, Telegram ID. | Working |
+| **Settings** | `/settings` | App configuration, LLM provider, model selection, STT toggle. | Basic |
+| **Reports** | *(future)* | Project profitability, cashflow, time reports. | Planned (Phase 05+) |
+| **Integrations** | *(future)* | Google Calendar, Telegram, payment gateways. | Partial (Calendar + Telegram exist) |
 
-### Today (`/today`)
-Daily view showing today's tasks (overdue, today, upcoming) and meetings. Quick-add functionality. Calendar card with monthly view.
+## User Journey (Primary Flow)
 
-### Dashboard (`/dashboard`)
-Overview of all projects with stats (total tasks, completed, balance). Project revenue bar chart. Health status cards. Finance summary (from `FinanceContext`).
-
-### Projects (`/projects`)
-List of active projects with task counts and financial balance. Add project, archive project, swipeable project cards. Navigate to project details.
-
-### Project Details (`/projects/:id`)
-Single project view with header, finance mini-card, project info card, and tasks card. Shows project-specific transactions from `FinanceContext`.
-
-### Finance (`/finance`)
-Finance dashboard with:
-- Summary card (income, expense, balance for period)
-- Transaction filters (period, project)
-- Transaction table with add/edit/delete
-- Commitments management (one-off and recurring)
-- Analytics panel (project summaries, top categories, upcoming payouts)
-- Currently frontend-only (no persistence)
-
-### Collaborators (`/collaborators`)
-Contact directory for project collaborators. CRUD operations with fields: name, role, email, phone, Telegram ID.
-
-### Settings (`/settings`)
-App configuration including LLM provider, model selection, STT provider toggle, and connection status display.
-
-### More (`/more`)
-Secondary navigation hub.
+1. **User creates a project** -- adds name, client info, dates, priority
+2. **User adds tasks** -- titles, descriptions, due dates, assignees, priorities, labels
+3. **User schedules meetings** -- title, date, duration, participants, Google Calendar sync
+4. **User adds collaborators** -- names, roles, contact info, Telegram IDs
+5. **User records income/expenses** -- transactions linked to projects (currently frontend-only)
+6. **User creates an invoice** *(future)* -- items, quantities, rates, tax, send to client
+7. **User tracks payments** *(future)* -- mark invoices as paid, partial payments
+8. **Jarvis summarizes what matters today** -- assistant provides daily briefing
+9. **Dashboard shows project health** -- active tasks, overdue items, financial status
 
 ## Architecture
 
@@ -82,14 +87,53 @@ Secondary navigation hub.
 2. Frontend calls Express REST API via `apiCall` wrapper
 3. Backend queries PostgreSQL (or PGlite)
 4. Frontend state updates via React Context
-5. Finance state is managed separately via `useReducer` (not persisted in Phase 01)
+5. Finance state is managed separately via `useReducer` (not persisted until Phase 03)
 
 ## Technical Constraints
 
 - All backend routes are in a single `server.js` file (not split into route modules)
 - Vite with apiProxy forwards `/api/*` to backend in development mode
 - Production build: Vite outputs to `dist/`, Express serves both API and static files
-- No ORM — raw SQL queries using `pg` or `@middle-management/pglite-pg-adapter`
+- No ORM -- raw SQL queries using `pg` or `@middle-management/pglite-pg-adapter`
+- No formal migration system: schema changes are applied manually
+- No user authentication: all users share the same data
+
+## MVP Scope (v1.0)
+
+The MVP includes all working modules plus:
+
+- [x] Project CRUD with client info, archiving
+- [x] Task CRUD with priorities, labels, status, assignees, due dates
+- [x] Meeting CRUD with Google Calendar integration
+- [x] Collaborator CRUD with Telegram notifications
+- [x] AI Assistant with task/meeting/project creation via natural language
+- [x] Dashboard with project stats and task overview
+- [x] Finance UI prototype (transactions, commitments, categories)
+- [ ] Persistent finance transactions (Phase 03)
+- [ ] Invoice creation and tracking (Phase 03)
+- [ ] Project profitability calculations (Phase 03)
+- [ ] Project Details v2 with integrated tabs (Phase 04)
+
+## Post-MVP Scope
+
+- Time tracking with start/stop timer
+- Recurring invoices
+- Payment gateway integration
+- Multi-user support with authentication
+- File attachments
+- Activity feed / audit log
+- Browser extension for time tracking
+- Mobile app (React Native or PWA)
+- WebSocket for real-time updates
+
+## Non-goals
+
+- Enterprise features (RBAC, SSO, compliance reporting)
+- Real-time collaboration (Google Docs-style multi-user editing)
+- Built-in CRM beyond basic client info
+- Native mobile app in v1 (PWA is acceptable)
+- Social features (feed, comments, @mentions)
+- Public API for third-party developers
 
 ## Design Principles
 
@@ -98,11 +142,17 @@ Secondary navigation hub.
 3. **Self-hosted**: User owns their data
 4. **Freelance-focused**: Skip enterprise features, focus on solo/small-team workflows
 5. **Progressive enhancement**: Start with basics, add sophistication incrementally
+6. **Task-money separation**: Tasks are work items. Transactions are money events. Do not conflate them.
 
-## Success Metrics
+## Success Criteria for v1.0
 
-- Build passes cleanly (`npm run build`)
-- Health check endpoint responds correctly
-- All CRUD operations work for projects, tasks, meetings, collaborators
-- Assistant can create tasks and meetings from natural language
-- Finance UI renders and computes correctly (even without persistence)
+1. `npm run build` passes
+2. `npm run lint` passes (pre-existing warnings acceptable)
+3. Health check endpoint returns correct status
+4. All CRUD routes work for projects, tasks, meetings, collaborators
+5. Finance transactions are persistent (database-backed)
+6. Invoices can be created and tracked
+7. Project profitability can be calculated from finance data
+8. Assistant creates tasks, meetings, and projects from natural language
+9. Dashboard shows correct financial and project data
+10. Page refresh does not lose finance data

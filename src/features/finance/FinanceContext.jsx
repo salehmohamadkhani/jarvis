@@ -10,6 +10,11 @@ const PERIODS = {
   year: { label: 'Yearly', days: 365 },
 }
 
+// Phase 03 TODO:
+// Finance state is currently frontend-only (useReducer). Transactions and commitments should become
+// database-backed through finance APIs, and project balances should use finance_transactions
+// instead of legacy task cost_amount fields.
+// See DATA_MODEL.md for the target schema and PHASE_03_IMPLEMENTATION_PLAN.md for the migration plan.
 const initialState = {
   transactions: [],
   commitments: [],

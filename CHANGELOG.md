@@ -2,24 +2,44 @@
 
 All notable changes to Jarvis are documented in this file.
 
-## [Unreleased] — Phase 01 Foundation Fix
-
-### Fixed
-- **Health check mismatch**: Backend `/api/health` now returns `{ ok, status: 'ok', database: 'connected' }`. Frontend `healthCheck()` accepts `data.ok === true`, `data.status === 'ok'`, or `data.database === 'connected'` for resilience.
-- **UUID-safe task assignee**: Replaced `parseInt(updates.assigneeId)` with safe `String()` conversion in task update API call. UUIDs are no longer corrupted by numeric parsing.
-- **Telegram ID persistence**: Verified that frontend sends `telegramId` and backend correctly maps it to `telegram_id` in both POST and PUT collaborator routes.
+## [Unreleased] -- Phase 02 Product Spec & Data Model
 
 ### Added
-- **README.md**: Professional English documentation with overview, setup instructions, tech stack, project structure, environment variables, and known limitations.
-- **AGENTS.md**: Guide for future AI agents explaining architecture, safe working rules, and build verification process.
-- **ROADMAP.md**: Eight-phase development roadmap from foundation through portfolio release.
-- **CHANGELOG.md**: This file — release history and unreleased changes.
-- **PRODUCT_SPEC.md**: Lightweight product specification with positioning, users, modules, and feature details.
-- **scripts/check-health.mjs**: Standalone health check utility script.
-- **Package scripts**: Added `check` and `verify` scripts (lint + build combined).
+
+- **PRODUCT_SPEC.md**: Detailed product specification defining Jarvis as an AI-powered freelance project and finance OS. Includes positioning, primary users, core problem, core promise, main modules, user journeys, MVP scope, non-goals, and v1.0 success criteria.
+- **DATA_MODEL.md**: Comprehensive data model documentation covering current tables, model problems, proposed v2 entities, entity relationships, finance model, invoice model, project profitability model, migration strategy, assistant command implications, and open questions.
+- **db/schema.v2.sql**: Draft PostgreSQL schema for Phase 03 finance persistence. Includes 9 new tables: `project_collaborators`, `finance_categories`, `finance_transactions`, `finance_commitments`, `invoices`, `invoice_items`, `payments`, `project_rates`, `time_entries`. All with IF NOT EXISTS for safety.
+- **PHASE_03_IMPLEMENTATION_PLAN.md**: Practical implementation plan for Phase 03 finance persistence. Includes objective, files to change, backend endpoints, frontend API client design, FinanceContext migration plan, project balance unification plan, database migration notes, testing plan, risk management, and definition of done.
+- **ROADMAP.md**: Updated development roadmap with detailed Phase 03 (Finance Persistence), Phase 04 (Project Details v2), Phase 05 (Dashboard v2), Phase 06 (Assistant v2) tasks.
+
+### Notes
+
+- Phase 02 is a documentation-and-design-only phase. No code was changed.
+- `db/schema.v2.sql` is a DRAFT and must be reviewed before applying to any database.
+- Finance persistence, invoice creation, and payment tracking are designed but NOT implemented.
+- The FinanceContext frontend-only prototype remains untouched. Phase 03 will replace it.
+
+## [Phase 01] -- 2025-05-24
+
+### Fixed
+
+- Health check endpoint now returns consistent `{ ok, status: 'ok', database: 'connected' }` shape.
+- UUID assignee handling: replaced `parseInt` with `String()` for UUID safety.
+- Telegram ID persistence verified (frontend sends `telegramId`, backend maps to `telegram_id`).
+
+### Added
+
+- Professional English README with setup instructions and known limitations.
+- AGENTS.md guide for AI agents.
+- ROADMAP.md with 8-phase development plan.
+- CHANGELOG.md for release history.
+- PRODUCT_SPEC.md lightweight product specification.
+- `scripts/check-health.mjs` health check utility.
+- Package scripts (`check`, `verify`).
 
 ### Known Limitations
-- **Finance is not persistent**: All finance data (transactions, commitments) is stored in frontend memory via `useReducer` and is lost on page refresh. No finance database tables or APIs exist.
-- **Dual finance data sources**: `tasks.costAmount` is used for financial display on project cards and dashboard, while `FinanceContext.transactions` is used on the Finance page. These are not unified.
-- **No user authentication**: The application currently has no authentication system. All users share the same data.
-- **Finance/balance data unification needed**: The two parallel systems for tracking financial data (costAmount on tasks vs. FinanceContext transactions) should be consolidated into one persistent model.
+
+- Finance is not persistent. All finance data lives in frontend memory.
+- Dual finance data sources: `tasks.cost_amount` and `FinanceContext.transactions` are not unified.
+- No user authentication.
+- Finance/balance data unification needed.

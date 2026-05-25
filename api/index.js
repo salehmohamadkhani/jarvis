@@ -61,6 +61,7 @@ app.get('/health/db', async (req, res) => {
 app.get('/health', async (req, res) => {
   const dbHealth = await checkDatabaseHealth();
   res.json({
+    ok: dbHealth.ok,
     status: dbHealth.ok ? 'ok' : 'error',
     database: dbHealth.ok ? 'connected' : 'disconnected',
     timestamp: new Date().toISOString()
